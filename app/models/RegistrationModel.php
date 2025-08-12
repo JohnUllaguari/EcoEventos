@@ -28,6 +28,13 @@ class RegistrationModel {
     // leer las inscripciones actuales
     $rows = self::all();
 
+        //Validar que no exista ya el mismo email para este evento - john
+    foreach ($rows as $r) {
+      if ($r['event_id'] === $event['id'] && strtolower(trim($r['email'])) === strtolower(trim($email))) {
+        throw new Exception('Ya estás inscrito en este evento');
+      }
+    }
+
     // agregar una nueva fila (PHP usa $array[] para push)
     $rows[] = [
       'id'       => gen_id('rg'),

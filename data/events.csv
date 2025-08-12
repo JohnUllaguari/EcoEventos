@@ -2,4 +2,4 @@ id,titulo,tipo,fecha,hora,ubicacion,cupo,inscritos,descripcion,detalle
 ev1,"Minga de Limpieza - Río Machángara",Limpieza,2024-08-14,09:00,"Parque Metropolitano, Quito",50,0,"Únete a nosotros para limpiar las orillas del río Machángara.","Recolección de residuos, clasificación, taller educativo y refrigerio."
 ev2,"Sembratón de Árboles Nativos",Sembratón,2024-08-21,08:30,"Bosque Protector Pichincha",30,0,"Plantaremos 200 árboles nativos en la zona de recuperación.","Siembra guiada y charla de conservación."
 ev3,"Minga Comunitaria - Huerto Urbano",Minga,2024-08-28,10:00,"Centro Comunitario La Floresta",20,0,"Construcción colaborativa de un huerto comunitario.","Armado de bancales, compost y riego."
-ev4e778941,"Recolecta Parque Nueva Kennedy",Limpieza,2025-08-20,11:30,"Estero Salado",30,2,"Llevar ropa comoda","Se darán refrigerios durante la jornada"
+ev4e778941,"Recolecta Parque Nueva Kennedy",Limpieza,2025-08-20,11:30,"Estero Salado",30,3,"Llevar ropa comoda","Se darán refrigerios durante la jornada"

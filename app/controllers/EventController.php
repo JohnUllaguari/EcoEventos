@@ -59,7 +59,9 @@ class EventController {
       EventModel::incrementInscritos($id);
       echo "<script>alert('Inscripción registrada');location='?action=detail&id=".htmlspecialchars($id,ENT_QUOTES,'UTF-8')."';</script>";
     } catch (Exception $e){
-      echo "<p>Error: ".htmlspecialchars($e->getMessage())."</p>";
+       // Mostrar el error en un alert y volver al detalle - john
+      $msg = htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
+      echo "<script>alert('$msg');location='?action=detail&id=".htmlspecialchars($id,ENT_QUOTES,'UTF-8')."';</script>";
     }
   }
 
