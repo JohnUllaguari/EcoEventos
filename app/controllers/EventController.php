@@ -1,55 +1,42 @@
 <?php
-// app/controllers/EventController.php
 require_once __DIR__ . '/../models/EventModel.php';
 require_once __DIR__ . '/../models/RegistrationModel.php';
 
 class EventController {
-  /* VISTAS */
-
-  # lista + filtros (Requisito: Ver eventos).
   public function index(){
     $tipo   = $_GET['tipo']   ?? '';
     $search = $_GET['search'] ?? '';
     $events = EventModel::filter($tipo, $search);
-    $view = __DIR__ . '/../views/events/index.php';
+    $PAGE = 'index';
     require __DIR__ . '/../views/layout/header.php';
-    require $view;
+    require __DIR__ . '/../views/events/index.php';
     require __DIR__ . '/../views/layout/footer.php';
   }
-
-  # detalle + lista de inscritos + form de inscripción. (Requisito: Ver detalles de un evento).
   public function detail(){
     $id = $_GET['id'] ?? '';
     $event = EventModel::find($id);
     if (!$event){ http_response_code(404); echo "<p>No encontrado</p>"; return; }
     $regs = RegistrationModel::forEvent($id);
-    $view = __DIR__ . '/../views/events/detail.php';
+    $PAGE = 'detail';
     require __DIR__ . '/../views/layout/header.php';
-    require $view;
+    require __DIR__ . '/../views/events/detail.php';
     require __DIR__ . '/../views/layout/footer.php';
   }
-
-  # formulario de creación de evento (Requisito: Crear un evento).
-  
   public function createForm(){
-    $view = __DIR__ . '/../views/events/create.php';
+    $PAGE = 'createForm';
     require __DIR__ . '/../views/layout/header.php';
-    require $view;
+    require __DIR__ . '/../views/events/create.php';
     require __DIR__ . '/../views/layout/footer.php';
   }
-
-  # procesar formulario de creación de evento (Requisito: Crear un evento).
   public function createSubmit(){
     try{
       EventModel::create($_POST);
       header("Location: ?action=index");
     } catch (Exception $e){
       http_response_code(400);
-      echo "<p>Error: ".htmlspecialchars($e->getMessage())."</p>";
+      echo "<p>Error: ".e($e->getMessage())."</p>";
     }
   }
-
-  # procesar formulario de inscripción a evento (Requisito: Inscribirse a un evento).
   public function registerSubmit(){
     $id = $_GET['id'] ?? '';
     $event = EventModel::find($id);
@@ -59,24 +46,26 @@ class EventController {
       EventModel::incrementInscritos($id);
       echo "<script>alert('Inscripción registrada');location='?action=detail&id=".htmlspecialchars($id,ENT_QUOTES,'UTF-8')."';</script>";
     } catch (Exception $e){
-       // Mostrar el error en un alert y volver al detalle - john
-      $msg = htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
-      echo "<script>alert('$msg');location='?action=detail&id=".htmlspecialchars($id,ENT_QUOTES,'UTF-8')."';</script>";
+      echo "<p>Error: ".e($e->getMessage())."</p>";
     }
   }
 
-  /* API  */
-  
-  # listar eventos (Requisito: Ver eventos).
-  
   public function apiEvents(){
+    // 🔹 Limpia cualquier salida previa (evita que warnings rompan el JSON)
+    if (function_exists('ob_get_length') && ob_get_length()) { @ob_clean(); }
+
     header('Content-Type: application/json; charset=utf-8');
+
     $tipo   = $_GET['tipo']   ?? '';
     $search = $_GET['search'] ?? '';
-    echo json_encode(EventModel::filter($tipo,$search), JSON_UNESCAPED_UNICODE);
-  }
 
-  # detalle de evento (Requisito: Ver detalles de un evento).
+    // Opcional: desactivar display_errors en endpoints
+    // ini_set('display_errors', 0);
+
+    echo json_encode(EventModel::filter($tipo, $search), JSON_UNESCAPED_UNICODE);
+    exit; // 🔹 corta aquí para que nada más se agregue al body
+  }
+  
   public function apiEventDetail(){
     header('Content-Type: application/json; charset=utf-8');
     $id = $_GET['id'] ?? '';
@@ -84,8 +73,6 @@ class EventController {
     if (!$ev){ http_response_code(404); echo json_encode(['message'=>'No encontrado'], JSON_UNESCAPED_UNICODE); return; }
     echo json_encode($ev, JSON_UNESCAPED_UNICODE);
   }
-
-  # crear evento (Requisito: Crear un evento).
   public function apiEventCreate(){
     header('Content-Type: application/json; charset=utf-8');
     $input = json_decode(file_get_contents('php://input'), true) ?: [];
@@ -96,8 +83,6 @@ class EventController {
       http_response_code(400); echo json_encode(['message'=>$e->getMessage()], JSON_UNESCAPED_UNICODE);
     }
   }
-
-  # inscribirse a evento (Requisito: Inscribirse a un evento).
   public function apiRegister(){
     header('Content-Type: application/json; charset=utf-8');
     $id = $_GET['id'] ?? '';

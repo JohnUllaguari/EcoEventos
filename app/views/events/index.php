@@ -1,6 +1,6 @@
 <?php // app/views/events/index.php ?>
 <div class="card">
-  <form method="get">
+  <form id="filtersForm" method="get">
     <input type="hidden" name="action" value="index">
     <input name="search" placeholder="Buscar..." value="<?php echo e($_GET['search'] ?? ''); ?>">
     <select name="tipo">
@@ -14,6 +14,7 @@
   </form>
 </div>
 
+<div id="events-list">
 <?php foreach ($events as $e) { ?>
   <div class="card">
     <h3><?php echo e($e['titulo']); ?> <small>(<?php echo e($e['tipo']); ?>)</small></h3>
@@ -21,6 +22,6 @@
     <p>📅 <?php echo e($e['fecha']); ?> <?php echo e($e['hora']); ?> — 📍 <?php echo e($e['ubicacion']); ?></p>
     <p>👥 <?php echo e($e['inscritos']); ?>/<?php echo e($e['cupo']); ?> participantes</p>
     <a class="btn" href="?action=detail&id=<?php echo urlencode($e['id']); ?>">Ver detalles</a>
-  </div>                              
+  </div>
 <?php } ?>
-
+</div>

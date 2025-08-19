@@ -1,17 +1,10 @@
 <?php
 require_once __DIR__ . '/../helpers.php';
 
-# EventModel.php
-
 class EventModel {
-
-  
-  # leer todos los eventos
   public static function all(){
     return read_csv_assoc(EVENTS_CSV);
   }
-
-  # filtrar eventos por tipo y búsqueda
   public static function filter($tipo='', $search=''){
     $events = self::all();
     $search = mb_strtolower(trim($search), 'UTF-8');
@@ -27,14 +20,10 @@ class EventModel {
       return $ok;
     }));
   }
-
-  # buscar un evento por id
   public static function find($id){
     foreach (self::all() as $e){ if (($e['id']??'')===$id) return $e; }
     return null;
   }
-
-  # crear un evento
   public static function create($data){
     foreach (['titulo','tipo','fecha','ubicacion'] as $r){
       if (empty(trim($data[$r] ?? ''))) throw new Exception('Faltan campos obligatorios');
@@ -50,22 +39,25 @@ class EventModel {
       'cupo'=>(string) intval($data['cupo'] ?? 0),
       'inscritos'=>'0',
       'descripcion'=>$data['descripcion'] ?? '',
-      'detalle'=>$data['detalle'] ?? ''
+      'detalle'=>$data['detalle'] ?? '',
+      'organizer_id'=> current_user()['id'] ?? ''
     ];
     $events[] = $ev;
     write_csv_assoc(EVENTS_CSV, $events);
     return $ev;
   }
-
-  # incrementar el número de inscritos de un evento
   public static function incrementInscritos($id){
     $events = self::all();
+    $changed = false;
     for($i=0;$i<count($events);$i++){
       if ($events[$i]['id']===$id){
         $events[$i]['inscritos'] = (string) (intval($events[$i]['inscritos']) + 1);
-        break;
+        $changed = true; break;
       }
     }
-    write_csv_assoc(EVENTS_CSV, $events);
+    if ($changed) write_csv_assoc(EVENTS_CSV, $events);
+  }
+  public static function forOrganizer($orgId){
+    return array_values(array_filter(self::all(), fn($e)=> ($e['organizer_id'] ?? '') === $orgId));
   }
 }
