@@ -1,31 +1,35 @@
 # EcoEventos
 
-Una aplicación web para la gestión de eventos ecológicos desarrollada en PHP con almacenamiento en archivos CSV.
-<img width="600" height="400" alt="image" src="https://github.com/user-attachments/assets/ffe0a3c7-1c8b-4342-932c-b860063c6d98" />
+Una aplicación web integral para la gestión de eventos comunitarios sostenibles, desarrollada en PHP puro con almacenamiento en archivos CSV. Permite a los usuarios crear, gestionar, inscribirse y registrar el impacto de eventos ecológicos.
+<img src="https://github.com/user-attachments/assets/010cfaab-26f2-4502-8f53-d938596349ed" 
+     width="600" height="400" alt="image" 
+     style="display: block; margin: 0 auto;" />
 
 ## Descripción
 
-EcoEventos es una plataforma simple y eficiente para crear, gestionar e inscribirse a eventos relacionados con actividades ecológicas como limpiezas, sembratons y mingas comunitarias. La aplicación incluye un sistema de autenticación, seguimiento de impacto ambiental y una API REST completa.
+EcoEventos es una plataforma digital diseñada para simplificar y optimizar la organización, promoción y participación en eventos comunitarios con un enfoque en la sostenibilidad. Facilita la conexión entre organizadores y participantes, permitiendo la planificación de actividades, gestión de inscripciones, difusión de información relevante y el seguimiento del impacto ambiental y social de cada evento.
 
-## Características
+## Características Principales
 
-- **Gestión de Eventos**: Crear, visualizar y filtrar eventos ecológicos
-- **Sistema de Autenticación**: Registro e inicio de sesión de usuarios
-- **Inscripciones**: Sistema de registro para participantes con control de cupos
-- **Tipos de Eventos**: Soporte para diferentes categorías (Limpieza, Sembratón, Minga)
-- **Búsqueda y Filtros**: Buscar eventos por título, descripción o ubicación
-- **API REST**: Endpoints JSON para integración externa
+- **Gestión Completa de Eventos**: Creación, visualización, edición y filtrado de eventos ecológicos (Limpieza, Sembratón, Minga).
+- **Sistema de Usuarios**: Registro y autenticación (login/logout).
+- **Inscripciones de Participantes**: Registro sencillo a eventos con control de cupos y listado de inscritos.
+- **Registro de Impacto Ambiental**: Herramientas para que los organizadores registren métricas de sostenibilidad (plástico, metal, papel/cartón, otros residuos, árboles plantados).
+- **Estadísticas Detalladas**: Visualización de datos estadísticos de asistencia y participación en eventos, incluyendo porcentajes de asistencia.
+- **API RESTful**: Conjunto de endpoints para la interacción programática con la aplicación (creación, lectura, actualización de eventos, inscripciones, impacto).
+- **Interfaz de Usuario Moderna y Responsiva**: Diseño intuitivo y adaptable a diferentes dispositivos (ordenadores, tablets, smartphones).
+  
+## Tecnologías Utilizadas
 
-## Tecnologías
-
-- **Backend**: PHP 8.2
-- **Almacenamiento**: Archivos CSV
-- **Frontend**: HTML, CSS vanilla, JavaScript
-- **Servidor**: PHP Built-in Server
+- **Backend**: PHP 8.1 (o superior) con una arquitectura basada en el patrón Modelo-Vista-Controlador (MVC).
+- **Almacenamiento**: Archivos CSV para la persistencia de datos (eventos, usuarios, inscripciones, impactos).
+- **Frontend**: HTML5, CSS3 (con estilos modernos y responsivos), y JavaScript ES6+ para interactividad.
+- **Servidor**: PHP Built-in Server (para desarrollo y pruebas).
 
 ## Estructura del Proyecto
 
 ```
+EcoEventos/
 ├── app/
 │   ├── controllers/
 │   │   ├── EventController.php      # Controlador principal de eventos
@@ -74,17 +78,42 @@ EcoEventos es una plataforma simple y eficiente para crear, gestionar e inscribi
    ```
 4. Visita `http://localhost:8000` en tu navegador
 
-## Uso
+## Uso de la Aplicación
 
-### Funcionalidades Principales
+1.  **Registro e Inicio de Sesión**: Regístrate como nuevo usuario o inicia sesión con una cuenta existente para acceder a todas las funcionalidades.
+2.  **Explorar Eventos**: En la página principal, puedes ver todos los eventos disponibles. Utiliza la barra de búsqueda y los filtros por tipo para encontrar eventos específicos.
+3.  **Crear un Evento**: Si has iniciado sesión, haz clic en "+ Crear Evento" para publicar una nueva actividad sostenible. Completa los detalles como título, tipo, fecha, ubicación, cupo y descripción.
+4.  **Ver Detalles del Evento**: Haz clic en cualquier tarjeta de evento para ver su información completa, incluyendo detalles adicionales y la lista de participantes inscritos.
+5.  **Inscribirse a un Evento**: Desde la página de detalles de un evento, puedes inscribirte. Tu nombre y email se rellenarán automáticamente si has iniciado sesión.
+6.  **Editar Eventos y Registrar Impacto**: Si eres el organizador de un evento, verás botones para "Editar" el evento o "Registrar Impacto" en su página de detalles. Aquí podrás actualizar la información del evento o añadir métricas de sostenibilidad (ej. cantidad de residuos reciclados, árboles plantados).
+7.  **Ver Estadísticas**: Accede a la sección "Estadísticas" desde la barra de navegación para ver un resumen de todos los eventos, el total de inscritos y el promedio de asistencia, junto con una tabla detallada por evento.
+8.  **Mis Eventos**: En la sección "Mis eventos" (disponible para usuarios logueados), podrás ver los eventos que has organizado.
 
-1. **Registro e Inicio de Sesión**: Crea una cuenta o inicia sesión para acceder a todas las funcionalidades
-2. **Ver Eventos**: Navega a la página principal para ver todos los eventos disponibles
-3. **Filtrar Eventos**: Usa los filtros por tipo y búsqueda de texto
-4. **Crear Evento**: Una vez autenticado, haz clic en "Crear Evento" y completa el formulario
-5. **Ver Detalles**: Haz clic en cualquier evento para ver información detallada
-6. **Inscribirse**: En la página de detalles, completa el formulario de inscripción
-7. **Registrar Impacto**: Los organizadores pueden registrar el impacto ambiental de sus eventos
+## Estructura de Datos (Archivos CSV)
+
+### `events.csv`
+Almacena la información de cada evento.
+```csv
+id,titulo,tipo,fecha,hora,ubicacion,cupo,inscritos,descripcion,detalle,organizer_id
+```
+
+### `users.csv`
+Contiene los datos de los usuarios registrados.
+```csv
+id,nombre,email,password_hash
+```
+
+### `registrations.csv`
+Registra las inscripciones de los usuarios a los eventos.
+```csv
+id,event_id,nombre,email,timestamp
+```
+
+### `impacts.csv`
+Guarda las métricas de impacto ambiental registradas para cada evento.
+```csv
+id,event_id,organizer_id,plastico,metal,papel_carton,otros,arboles,timestamp,notas
+```
 
 ## API REST
 
@@ -121,13 +150,9 @@ Content-Type: application/json
 }
 ```
 
-## Contribución
+## Contribuciones
 
-Para contribuir al proyecto:
+Para preguntas, sugerencias o contribuciones, por favor crea un issue o un pull request en el repositorio del proyecto.
 
-1. Haz fork del repositorio
-2. Crea una rama para tu funcionalidad
-3. Realiza tus cambios
-4. Envía un pull request
 
-Para preguntas o sugerencias sobre el proyecto, por favor crea un issue en el repositorio.
+
