@@ -65,7 +65,7 @@ class EventController {
     echo json_encode(EventModel::filter($tipo, $search), JSON_UNESCAPED_UNICODE);
     exit; // 🔹 corta aquí para que nada más se agregue al body
   }
-  
+
   public function apiEventDetail(){
     header('Content-Type: application/json; charset=utf-8');
     $id = $_GET['id'] ?? '';
@@ -98,4 +98,78 @@ class EventController {
       http_response_code($code); echo json_encode(['message'=>$e->getMessage()], JSON_UNESCAPED_UNICODE);
     }
   }
+
+  public function updateForm(){
+    $id = $_GET['id'] ?? '';
+    $event = EventModel::find($id);
+    if (!$event){ http_response_code(404); echo "<p>No encontrado</p>"; return; }
+    if (!is_owner($event)){ http_response_code(403); echo "<p>No autorizado</p>"; return; }
+    $PAGE = 'updateForm';
+    require __DIR__ . '/../views/layout/header.php';
+    require __DIR__ . '/../views/events/update.php';
+    require __DIR__ . '/../views/layout/footer.php';
+  }
+
+  public function updateSubmit(){
+    try{
+      $id = $_GET['id'] ?? '';
+      $event = EventModel::find($id);
+      if (!$event){ http_response_code(404); echo "<p>No encontrado</p>"; return; }
+      if (!is_owner($event)){ http_response_code(403); echo "<p>No autorizado</p>"; return; }
+      EventModel::update($id, $_POST);
+      header("Location: ?action=detail&id=".htmlspecialchars($id,ENT_QUOTES,'UTF-8'));
+    } catch (Exception $e){
+      http_response_code(400);
+      echo "<p>Error: ".e($e->getMessage())."</p>";
+    }
+  }
+
+  public function apiEventUpdate(){
+    header('Content-Type: application/json; charset=utf-8');
+    $id = $_GET['id'] ?? '';
+    $event = EventModel::find($id);
+    if (!$event){ http_response_code(404); echo json_encode(['message'=>'No encontrado'], JSON_UNESCAPED_UNICODE); return; }
+    if (!is_owner($event)){ http_response_code(403); echo json_encode(['message'=>'No autorizado'], JSON_UNESCAPED_UNICODE); return; }
+    $input = json_decode(file_get_contents('php://input'), true) ?: [];
+    try{
+      $ev = EventModel::update($id, $input);
+      echo json_encode($ev, JSON_UNESCAPED_UNICODE);
+    } catch (Exception $e){
+      http_response_code(400); echo json_encode(['message'=>$e->getMessage()], JSON_UNESCAPED_UNICODE);
+    }
+  }
+
+  public function viewStats(){
+    $events = EventModel::all();
+    $registrations = RegistrationModel::all();
+
+    $eventStats = [];
+    foreach ($events as $event) {
+        $eventId = $event["id"];
+        $registeredCount = 0;
+        foreach ($registrations as $reg) {
+            if ($reg["event_id"] === $eventId) {
+                $registeredCount++;
+            }
+        }
+        $cupo = intval($event["cupo"]);
+        $porcentajeAsistencia = $cupo > 0 ? round(($registeredCount / $cupo) * 100, 2) : 0;
+        
+        $eventStats[] = [
+            "id" => $eventId,
+            "titulo" => $event["titulo"],
+            "tipo" => $event["tipo"],
+            "fecha" => $event["fecha"],
+            "cupo" => $cupo,
+            "inscritos" => $registeredCount,
+            "porcentaje_asistencia" => $porcentajeAsistencia
+        ];
+    }
+
+    $PAGE = 'viewStats';
+    require __DIR__ . '/../views/layout/header.php';
+    require __DIR__ . '/../views/events/stats.php';
+    require __DIR__ . '/../views/layout/footer.php';
+  }
 }
+

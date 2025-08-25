@@ -84,6 +84,7 @@
 
       <ul class="nav-links">
         <li><a href="?action=index">Eventos</a></li>
+        <li><a href="?action=viewStats">Estadísticas</a></li>
         <?php if (current_user()) { ?>
           <li><a href="?action=myEvents">Mis eventos</a></li>
         <?php } ?>

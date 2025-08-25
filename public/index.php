@@ -14,6 +14,9 @@ switch ($action) {
   case 'detail':          $ev->detail(); break;
   case 'createForm':      require_auth(); $ev->createForm(); break;
   case 'createSubmit':    require_auth(); $ev->createSubmit(); break;
+  case 'updateForm':      require_auth(); $ev->updateForm(); break;
+  case 'updateSubmit':    require_auth(); $ev->updateSubmit(); break;
+  case 'viewStats':       $ev->viewStats(); break;
   case 'registerSubmit':  $ev->registerSubmit(); break;
 
   case 'loginForm':       $au->loginForm(); break;
@@ -30,6 +33,7 @@ switch ($action) {
   case 'api_events':        $ev->apiEvents(); break;
   case 'api_event_detail':  $ev->apiEventDetail(); break;
   case 'api_event_create':  require_auth(); $ev->apiEventCreate(); break;
+  case 'api_event_update':  require_auth(); $ev->apiEventUpdate(); break;
   case 'api_register':      $ev->apiRegister(); break;
   case 'api_impact_detail': $im->apiDetail(); break;
 

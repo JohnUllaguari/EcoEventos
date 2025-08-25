@@ -60,4 +60,25 @@ class EventModel {
   public static function forOrganizer($orgId){
     return array_values(array_filter(self::all(), fn($e)=> ($e['organizer_id'] ?? '') === $orgId));
   }
+
+  public static function update($id, $data){
+    $events = self::all();
+    $updated = false;
+    for($i=0;$i<count($events);$i++){
+      if ($events[$i]['id']===$id){
+        $events[$i]['titulo'] = $data['titulo'] ?? $events[$i]['titulo'];
+        $events[$i]['tipo'] = $data['tipo'] ?? $events[$i]['tipo'];
+        $events[$i]['fecha'] = $data['fecha'] ?? $events[$i]['fecha'];
+        $events[$i]['hora'] = $data['hora'] ?? $events[$i]['hora'];
+        $events[$i]['ubicacion'] = $data['ubicacion'] ?? $events[$i]['ubicacion'];
+        $events[$i]['cupo'] = (string) intval($data['cupo'] ?? $events[$i]['cupo']);
+        $events[$i]['descripcion'] = $data['descripcion'] ?? $events[$i]['descripcion'];
+        $events[$i]['detalle'] = $data['detalle'] ?? $events[$i]['detalle'];
+        $updated = true; break;
+      }
+    }
+    if (!$updated) throw new Exception('Evento no encontrado');
+    write_csv_assoc(EVENTS_CSV, $events);
+    return self::find($id);
+  }  
 }
