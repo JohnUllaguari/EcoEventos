@@ -1,6 +1,7 @@
 # EcoEventos
 
 Una aplicación web integral para la gestión de eventos comunitarios sostenibles, desarrollada en PHP puro con almacenamiento en archivos CSV. Permite a los usuarios crear, gestionar, inscribirse y registrar el impacto de eventos ecológicos.
+
 <img src="https://github.com/user-attachments/assets/010cfaab-26f2-4502-8f53-d938596349ed" 
      width="600" height="400" alt="image" 
      style="display: block; margin: 0 auto;" />
@@ -153,6 +154,7 @@ Content-Type: application/json
 ## Contribuciones
 
 Para preguntas, sugerencias o contribuciones, por favor crea un issue o un pull request en el repositorio del proyecto.
+
 
 
 
