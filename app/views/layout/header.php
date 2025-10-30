@@ -103,10 +103,12 @@
 
   <!-- HERO (solo en la página principal; en otras puedes omitirlo) -->
   <?php
-    // Muestra el hero si NO estamos en formularios o páginas internas
-    $isHome = !isset($_GET['action']) || ($_GET['action'] ?? 'index') === 'index';
+    // Mostrar el hero solo en la página principal (acción = index o no definida)
+    $action = $_GET['action'] ?? 'index';
+    $isHome = ($action === 'index');
     if ($isHome):
   ?>
+
   <section class="hero bg">
     <div class="container content">
       <h1>EcoEventos</h1>
