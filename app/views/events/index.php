@@ -15,13 +15,22 @@
 </div>
 
 <div id="events-list">
-<?php foreach ($events as $e) { ?>
-  <div class="card">
-    <h3><?php echo e($e['titulo']); ?> <small>(<?php echo e($e['tipo']); ?>)</small></h3>
-    <p><?php echo e($e['descripcion']); ?></p>
-    <p>📅 <?php echo e($e['fecha']); ?> <?php echo e($e['hora']); ?> — 📍 <?php echo e($e['ubicacion']); ?></p>
-    <p>👥 <?php echo e($e['inscritos']); ?>/<?php echo e($e['cupo']); ?> participantes</p>
-    <a class="btn" href="?action=detail&id=<?php echo urlencode($e['id']); ?>">Ver detalles</a>
-  </div>
-<?php } ?>
+  <?php if (!empty($events)) : ?>
+    <?php foreach ($events as $e) : ?>
+      <div class="card">
+        <h3><?php echo htmlspecialchars($e['titulo']); ?> 
+            <small>(<?php echo htmlspecialchars($e['tipo']); ?>)</small></h3>
+        <p><?php echo htmlspecialchars($e['descripcion']); ?></p>
+        <p>📅 <?php echo htmlspecialchars($e['fecha']); ?> <?php echo htmlspecialchars($e['hora']); ?> — 
+           📍 <?php echo htmlspecialchars($e['ubicacion']); ?></p>
+        <p>👥 <?php echo htmlspecialchars($e['inscritos']); ?>/<?php echo htmlspecialchars($e['cupo']); ?> participantes</p>
+        <a class="btn" href="?action=detail&id=<?php echo urlencode($e['id']); ?>">Ver detalles</a>
+      </div>
+    <?php endforeach; ?>
+  <?php else : ?>
+    <div class="card">
+      <p>⚠️ No se encontraron eventos disponibles.</p>
+    </div>
+  <?php endif; ?>
 </div>
+
