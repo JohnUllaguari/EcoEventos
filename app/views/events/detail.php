@@ -1,41 +1,58 @@
 <?php // app/views/events/detail.php ?>
-<div class="card" id="eventDetail" data-event-id="<?php echo e($event['id']); ?>">
+
+<?php if (!isset($event) || !$event): ?>
+  <div class="card">
+    <p>⚠️ Error: No se encontró información del evento solicitado.</p>
+  </div>
+<?php else: ?>
+
+<div class="card" id="eventDetail" data-event-id="<?php echo htmlspecialchars($event['id']); ?>">
   <div class="event-header">
-    <h2><?php echo e($event['titulo']); ?></h2>
-    <?php if (is_owner($event)): ?>
+    <h2><?php echo htmlspecialchars($event['titulo']); ?></h2>
+
+    <?php if (function_exists('is_owner') && is_owner($event)): ?>
       <div class="owner-actions">
         <a href="?action=updateForm&id=<?php echo urlencode($event['id']); ?>" class="btn btn-edit">✏️ Editar</a>
         <a href="?action=impactForm&id=<?php echo urlencode($event['id']); ?>" class="btn btn-impact">📊 Registrar Impacto</a>
       </div>
     <?php endif; ?>
   </div>
-  
-  <p><?php echo e($event['descripcion']); ?></p>
-  
+
+  <p><?php echo htmlspecialchars($event['descripcion']); ?></p>
+
   <?php if (!empty($event['detalle'])): ?>
     <div class="event-details">
       <h4>Detalles adicionales:</h4>
-      <p><?php echo nl2br(e($event['detalle'])); ?></p>
+      <p><?php echo nl2br(htmlspecialchars($event['detalle'])); ?></p>
     </div>
   <?php endif; ?>
-  
+
   <ul class="event-info">
-    <li>📅 Fecha: <?php echo e($event['fecha']); ?> <?php echo e($event['hora']); ?></li>
-    <li>📍 Ubicación: <?php echo e($event['ubicacion']); ?></li>
-    <li id="participantsLine">👥 Participantes: <span id="inscritosCount"><?php echo e($event['inscritos']); ?></span>/<?php echo e($event['cupo'] > 0 ? $event['cupo'] : 'Ilimitado'); ?></li>
-    <li>🏷️ Tipo: <?php echo e($event['tipo']); ?></li>
+    <li>📅 Fecha: <?php echo htmlspecialchars($event['fecha']); ?> <?php echo htmlspecialchars($event['hora']); ?></li>
+    <li>📍 Ubicación: <?php echo htmlspecialchars($event['ubicacion']); ?></li>
+    <li id="participantsLine">
+      👥 Participantes: 
+      <span id="inscritosCount"><?php echo htmlspecialchars($event['inscritos']); ?></span>
+      /<?php echo ($event['cupo'] > 0) ? htmlspecialchars($event['cupo']) : 'Ilimitado'; ?>
+    </li>
+    <li>🏷️ Tipo: <?php echo htmlspecialchars($event['tipo']); ?></li>
   </ul>
-  
-  <?php if (!current_user()): ?>
+
+  <?php if (!function_exists('current_user') || !current_user()): ?>
     <div class="login-prompt">
-      <p>Para inscribirte en este evento, necesitas <a href="?action=loginForm">iniciar sesión</a> o <a href="?action=registerForm">registrarte</a>.</p>
+      <p>Para inscribirte en este evento, necesitas 
+         <a href="?action=loginForm">iniciar sesión</a> o 
+         <a href="?action=registerForm">registrarte</a>.</p>
     </div>
   <?php else: ?>
     <h3>Inscribirse</h3>
-    <form id="registerForm" method="post" action="?action=registerSubmit&id=<?php echo urlencode($event['id']); ?>">
+    <form id="registerForm" method="post" 
+          action="?action=registerSubmit&id=<?php echo urlencode($event['id']); ?>">
       <div class="form-row">
-        <input name="nombre" placeholder="Tu nombre" value="<?php echo e(current_user()['nombre']); ?>" required>
-        <input type="email" name="email" placeholder="Tu email" value="<?php echo e(current_user()['email']); ?>" required>
+        <input name="nombre" placeholder="Tu nombre" 
+               value="<?php echo htmlspecialchars(current_user()['nombre']); ?>" required>
+        <input type="email" name="email" placeholder="Tu email" 
+               value="<?php echo htmlspecialchars(current_user()['email']); ?>" required>
       </div>
       <button class="btn btn-primary">Inscribirme</button>
     </form>
@@ -43,19 +60,24 @@
 </div>
 
 <div class="card">
-  <h3>Inscritos (<?php echo count($regs); ?>)</h3>
-  <?php if (count($regs)===0) { ?>
+  <h3>Inscritos (<?php echo isset($regs) ? count($regs) : 0; ?>)</h3>
+  <?php if (empty($regs)) { ?>
     <p>Aún no hay inscritos para este evento.</p>
   <?php } else { ?>
     <ul id="inscritosList">
-      <?php foreach ($regs as $r) {
-        $ts = isset($r['timestamp']) ? date('d/m/Y H:i', strtotime($r['timestamp'])) : '';
-      ?>
-        <li><strong><?php echo e($r['nombre']); ?></strong> — <?php echo e($r['email']); ?> <?php if ($ts) echo ' · '.e($ts); ?></li>
-      <?php } ?>
+      <?php foreach ($regs as $r): 
+        $ts = isset($r['timestamp']) ? date('d/m/Y H:i', strtotime($r['timestamp'])) : ''; ?>
+        <li>
+          <strong><?php echo htmlspecialchars($r['nombre']); ?></strong> — 
+          <?php echo htmlspecialchars($r['email']); ?> 
+          <?php if ($ts) echo ' · '.htmlspecialchars($ts); ?>
+        </li>
+      <?php endforeach; ?>
     </ul>
   <?php } ?>
 </div>
+
+<?php endif; ?>
 
 
 <style>
