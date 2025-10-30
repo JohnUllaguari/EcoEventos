@@ -10,8 +10,8 @@ class EventModel {
     $search = mb_strtolower(trim($search), 'UTF-8');
     return array_values(array_filter($events, function($e) use($tipo,$search){
       $ok = true;
-      if ($tipo && $tipo!=='Todos'){
-        $ok = $ok && (mb_strtolower($e['tipo'],'UTF-8') === mb_strtolower($tipo,'UTF-8'));
+      if ($tipo && $tipo !== 'Todos') {
+        $ok = (mb_strtolower($e['tipo'], 'UTF-8') === mb_strtolower($tipo, 'UTF-8'));
       }
       if ($search){
         $hay = mb_strtolower(($e['titulo']??'') . ' ' . ($e['descripcion']??'') . ' ' . ($e['ubicacion']??''), 'UTF-8');
